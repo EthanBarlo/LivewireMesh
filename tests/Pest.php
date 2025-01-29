@@ -1,5 +1,5 @@
 <?php
 
-use EthanBarlo\Mesh\Tests\TestCase;
+use EthanBarlo\LivewireMesh\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

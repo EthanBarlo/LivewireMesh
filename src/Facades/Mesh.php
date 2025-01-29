@@ -5,7 +5,7 @@ namespace EthanBarlo\LivewireMesh\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \EthanBarlo\Mesh\Mesh
+ * @see \EthanBarlo\LivewireMesh\LivewireMesh
  */
 class LivewireMesh extends Facade
 {

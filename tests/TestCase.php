@@ -1,8 +1,8 @@
 <?php
 
-namespace EthanBarlo\Mesh\Tests;
+namespace EthanBarlo\LivewireMesh\Tests;
 
-use EthanBarlo\Mesh\MeshServiceProvider;
+use EthanBarlo\LivewireMesh\LivewireMeshServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -15,7 +15,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            MeshServiceProvider::class,
+            LivewireMeshServiceProvider::class,
         ];
     }
 
