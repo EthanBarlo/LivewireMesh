@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace EthanBarlo\Mesh\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class MeshCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'livewiremesh';
 
     public $description = 'My command';
 
