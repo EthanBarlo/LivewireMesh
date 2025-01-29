@@ -12,6 +12,6 @@ abstract class MeshComponent extends LivewireComponent
 
     public function render()
     {
-        return view('mesh::livewire.component');
+        return view('livewiremesh::livewire.component');
     }
 }
