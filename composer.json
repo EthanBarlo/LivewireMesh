@@ -65,7 +65,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "EthanBarlo\\LivewireMesh\\MeshServiceProvider"
+                "EthanBarlo\\LivewireMesh\\LivewireMeshServiceProvider"
             ],
             "aliases": {
                 "LivewireMesh": "EthanBarlo\\LivewireMesh\\Facades\\Mesh"

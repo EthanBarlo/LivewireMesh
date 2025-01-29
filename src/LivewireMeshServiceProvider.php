@@ -1,12 +1,12 @@
 <?php
 
-namespace EthanBarlo\Mesh;
+namespace EthanBarlo\LivewireMesh;
 
 use EthanBarlo\LivewireMesh\Commands\LivewireMeshCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class MeshServiceProvider extends PackageServiceProvider
+class LivewireMeshServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
