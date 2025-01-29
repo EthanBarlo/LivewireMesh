@@ -1,16 +1,16 @@
 <?php
 
-namespace EthanBarlo\Mesh\Facades;
+namespace EthanBarlo\LivewireMesh\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \EthanBarlo\Mesh\Mesh
  */
-class Mesh extends Facade
+class LivewireMesh extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \EthanBarlo\Mesh\Mesh::class;
+        return \EthanBarlo\LivewireMesh\LivewireMesh::class;
     }
 }

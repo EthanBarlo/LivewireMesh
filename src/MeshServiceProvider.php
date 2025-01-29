@@ -2,9 +2,9 @@
 
 namespace EthanBarlo\Mesh;
 
+use EthanBarlo\LivewireMesh\Commands\LivewireMeshCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use EthanBarlo\Mesh\Commands\MeshCommand;
 
 class MeshServiceProvider extends PackageServiceProvider
 {
@@ -19,7 +19,6 @@ class MeshServiceProvider extends PackageServiceProvider
             ->name('livewiremesh')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_livewiremesh_table')
-            ->hasCommand(MeshCommand::class);
+            ->hasCommand(LivewireMeshCommand::class);
     }
 }

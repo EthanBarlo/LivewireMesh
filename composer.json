@@ -4,7 +4,9 @@
     "keywords": [
         "Ethan Barlow",
         "laravel",
-        "livewiremesh"
+        "livewire",
+        "livewiremesh",
+        "react"
     ],
     "homepage": "https://github.com/ethanbarlo/livewiremesh",
     "license": "MIT",
@@ -17,8 +19,9 @@
     ],
     "require": {
         "php": "^8.3",
-        "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0",
+        "livewire/livewire": "^3.5",
+        "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -35,13 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "EthanBarlo\\Mesh\\": "src/",
-            "EthanBarlo\\Mesh\\Database\\Factories\\": "database/factories/"
+            "EthanBarlo\\LivewireMesh\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "EthanBarlo\\Mesh\\Tests\\": "tests/",
+            "EthanBarlo\\LivewireMesh\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +65,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "EthanBarlo\\Mesh\\MeshServiceProvider"
+                "EthanBarlo\\LivewireMesh\\MeshServiceProvider"
             ],
             "aliases": {
-                "Mesh": "EthanBarlo\\Mesh\\Facades\\Mesh"
+                "LivewireMesh": "EthanBarlo\\LivewireMesh\\Facades\\Mesh"
             }
         }
     },

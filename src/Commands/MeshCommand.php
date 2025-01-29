@@ -1,10 +1,10 @@
 <?php
 
-namespace EthanBarlo\Mesh\Commands;
+namespace EthanBarlo\LivewireMesh\Commands;
 
 use Illuminate\Console\Command;
 
-class MeshCommand extends Command
+class LivewireMeshCommand extends Command
 {
     public $signature = 'livewiremesh';
 
