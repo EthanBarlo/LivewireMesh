@@ -10,7 +10,7 @@ export default async function initLivewireMesh(
     Livewire: any,
     config: Config
 ) {
-    const { renderers, maxRenderAttempts = 1, renderDelay = 0 } = config;
+    const { renderers, maxRenderAttempts = 100, renderDelay = 50 } = config;
 
     // Initialize the LivewireMesh global object
     // Which tracks the activly rendered components and their props
@@ -44,14 +44,6 @@ export default async function initLivewireMesh(
                 renderAttempts++;
                 await new Promise(resolve => setTimeout(resolve, renderDelay));
             }
-        }
-
-        try {
-            const renderedComponent = await renderComponent(component, componentName);
-            setRenderedComponent(component.id, renderedComponent);
-            cleanup(() => renderedComponent.cleanup());
-        } catch (e) {
-            throw new Error("Error rendering LivewireMesh component: " + e);
         }
     });
 
