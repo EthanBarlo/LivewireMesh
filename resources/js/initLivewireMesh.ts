@@ -1,5 +1,6 @@
 import renderComponent from "./renderComponent";
 import {
+    debugLog,
     getComponentName,
     getProps,
     getRenderedComponent,
@@ -10,7 +11,7 @@ export default async function initLivewireMesh(
     Livewire: any,
     config: Config
 ) {
-    const { renderers, maxRenderAttempts = 100, renderDelay = 50 } = config;
+    const { renderers, maxRenderAttempts = 100, renderDelay = 50, debug } = config;
 
     // Initialize the LivewireMesh global object
     // Which tracks the activly rendered components and their props
@@ -21,9 +22,11 @@ export default async function initLivewireMesh(
             renderDelay,
             maxRenderAttempts,
             renderers: Object.fromEntries(renderers.map(r => [r.type, r.renderComponent])),
+            debug,
         },
     };
 
+    debugLog("Initialized LivewireMesh", window.Mesh.config);
 
     // Hook into Livewire component initialization
     Livewire.hook("component.init", async ({ component, cleanup }) => {
@@ -32,7 +35,9 @@ export default async function initLivewireMesh(
         if (!componentName) {
             return; // Not a LivewireMesh component
         }
-
+        debugLog("component.init | " + componentName, { component });
+        
+        debugLog("component.init | " + componentName, "Rendering component");
         let renderAttempts = 0;
         while(renderAttempts < maxRenderAttempts){
             try {
@@ -42,7 +47,8 @@ export default async function initLivewireMesh(
                 break;
             } catch (e) {
                 renderAttempts++;
-                await new Promise(resolve => setTimeout(resolve, renderDelay));
+                debugLog("component.init | " + componentName, "Rendering component (attempt " + renderAttempts + ")");
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
         }
     });

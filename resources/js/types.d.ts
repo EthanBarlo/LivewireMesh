@@ -60,6 +60,7 @@ type Config = {
     renderers: MeshRenderer[];
     maxRenderAttempts: number | undefined;
     renderDelay: number | undefined;
+    debug: boolean | undefined;
 }
 
 type RenderedComponent = {
