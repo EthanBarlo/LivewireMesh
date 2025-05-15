@@ -25,7 +25,7 @@ abstract class MeshComponent extends LivewireComponent
         $componentClass = str_replace('\\', '_', static::class);
         $viewFile = storage_path("framework/views/mesh-{$componentClass}.blade.php");
 
-        if (!file_exists($viewFile)) {
+        if (! file_exists($viewFile)) {
             // Copy the MeshComponent view file from the package's published view path
             $packageViewPath = base_path('vendor/ethanbarlo/livewiremesh/resources/views/livewire/component.blade.php');
             file_put_contents(
