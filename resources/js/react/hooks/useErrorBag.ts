@@ -7,10 +7,6 @@ export function useErrorBag() {
     const $wire = useWire();
     const [errors, setErrors] = useState($wire.__instance.snapshot.memo.errors);
 
-    function get(name: string): ErrorBagItem {
-        return errors[name] ?? null;
-    }
-
     // Listen to requests, and grab the error bag from them after completion
     useEffect(() => {
         $wire.$hook(
@@ -25,8 +21,5 @@ export function useErrorBag() {
         );
     }, [$wire]);
 
-    return {
-        get,
-        errors,
-    };
+    return errors;
 }
