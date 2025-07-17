@@ -2,12 +2,65 @@
 
 All notable changes to `LivewireMesh` will be documented in this file.
 
+## v0.5.7 - 2025-07-17
+
+Added a new `useErrorBag` hook.
+Which makes the error bag from laravel validation available for use.
+
+```tsx
+const $wire = useWire();
+const [userName, setUserName] = useEntangle<string>('user_name');
+const errors = useErrorBag();
+
+useEffect(() => {
+    console.log({
+        errors
+    })
+}, [errors]);
+
+
+return <> 
+{/* ....... */}
+<TextInput value={userName} onChange={setUserName} hasErrors={errors['user_name'] !== null}/>
+<ErrorMessage error={errors['user_name']}/>
+
+<Button onClick={() => $wire.save()}>Save</Button>
+</>
+
+```
+Multiple errors can be returned,
+So we also have a provided type, that can be used to help with the ErrorMessage component
+
+```tsx
+import { ErrorBagItem } from '@livewiremesh/react/hooks/useErrorBag';
+
+interface IError extends React.HTMLProps<HTMLParagraphElement> {
+    error?: ErrorBagItem;
+}
+const Error: React.FC<IError> = ({ message, error, className, ...props }) => {
+    if (!error) return null;
+    return (
+        <p className={cn('text-red-500 error', className)} {...props}>
+            {error &&
+                error.map((item) => (
+                    <span key={item} className="block">
+                        {item}
+                    </span>
+                ))}
+        </p>
+    );
+};
+
+export default Error;
+
+```
 ## v0.5.6 - 2025-07-17
 
 Updated useEntangle hook to accept generics for the data type.
 
 ```tsx
 const [count, setCount] = useEntangle<number>('count')
+
 
 ```
 ## v0.5.5 - 2025-05-15
