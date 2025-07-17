@@ -1,13 +1,13 @@
-type CleanupCallback = () => void;
+export type CleanupCallback = () => void;
 
-type ComponentsMap = {
+export type ComponentsMap = {
     [key: string]: {
         renderer: string;
         component: any;
     };
 };
 
-interface LivewireSnapshot {
+export interface LivewireSnapshot {
     // The serialized state of the component (public properties)
     data: Record<string, any>;
 
@@ -43,7 +43,7 @@ interface LivewireSnapshot {
     checksum: string;
 }
 
-type LivewireComponent = {
+export type LivewireComponent = {
     el: HTMLElement;
     id: string;
     name: string;
@@ -57,7 +57,7 @@ type LivewireComponent = {
     shapshotEncoded: string;
 };
 
-type Wire = {
+export type Wire = {
     $parent: Wire | null;
     $el: HTMLElement;
     $id: string;
@@ -96,44 +96,46 @@ type Wire = {
     __instance: LivewireComponent;
 };
 
-interface Window {
-    Mesh:
-        | {
-              components: ComponentsMap;
-              renderedComponents: {
-                  [key: string]: RenderedComponent;
-              };
-              config: Omit<Config, "renderers"> & {
-                  renderers: {
-                      [key: string]: RenderFunction;
-                  };
-              };
-          }
-        | undefined;
-}
-
-type Config = {
+export type Config = {
     renderers: MeshRenderer[];
     maxRenderAttempts: number | undefined;
     renderDelay: number | undefined;
     debug: boolean | undefined;
 };
 
-type RenderedComponent = {
+export type RenderedComponent = {
     componentName: string;
     props: any;
     updateProps: (livewireComponent: LivewireComponent, props: any) => void;
     cleanup: CleanupCallback;
 };
 
-type RenderFunction = (
+export type RenderFunction = (
     componentName: string,
     livewireComponent: LivewireComponent,
     MeshComponent: any,
     props: any
 ) => RenderedComponent;
 
-type MeshRenderer = {
+export type MeshRenderer = {
     type: string;
     renderComponent: RenderFunction;
 };
+
+declare global {
+    interface Window {
+        Mesh:
+            | {
+                  components: ComponentsMap;
+                  renderedComponents: {
+                      [key: string]: RenderedComponent;
+                  };
+                  config: Omit<Config, "renderers"> & {
+                      renderers: {
+                          [key: string]: RenderFunction;
+                      };
+                  };
+              }
+            | undefined;
+    }
+}
