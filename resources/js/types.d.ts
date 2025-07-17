@@ -4,7 +4,43 @@ type ComponentsMap = {
     [key: string]: {
         renderer: string;
         component: any;
-    }
+    };
+};
+
+interface LivewireSnapshot {
+    // The serialized state of the component (public properties)
+    data: Record<string, any>;
+
+    // Long-standing information about the component
+    memo: {
+        // The component's unique ID
+        id: string;
+
+        // The component's name (e.g., 'counter')
+        name: string;
+
+        // The URI, method, and locale of the web page that the
+        // component was originally loaded on
+        path: string;
+        method: string;
+        locale: string;
+
+        // A list of any nested "child" components
+        // Keyed by internal template ID with component ID as values
+        children: Record<string, [string, string]>;
+
+        // Whether or not this component was "lazy loaded"
+        lazyLoaded: boolean;
+
+        // A list of any validation errors thrown during the last request
+        errors: Record<string, string[]>;
+
+        // Additional memo properties that may be added by features
+        [key: string]: any;
+    };
+
+    // A securely encrypted hash of this snapshot
+    checksum: string;
 }
 
 type LivewireComponent = {
@@ -17,9 +53,9 @@ type LivewireComponent = {
     reactive: any;
     $wire: Wire;
     children: any[];
-    snapshot: any;
+    snapshot: LivewireSnapshot;
     shapshotEncoded: string;
-}
+};
 
 type Wire = {
     $parent: Wire | null;
@@ -33,27 +69,47 @@ type Wire = {
     $refresh: () => Promise<void>;
     $commit: () => void;
     $on: (event: string, callback: (...args: any[]) => void) => void;
+    $hook: (event: string, callback: (...args: any[]) => void) => void;
     $dispatch: (event: string, params: object) => void;
     $dispatchTo: (component: string, event: string, params: object) => void;
     $dispatchSelf: (event: string, params: object) => void;
-    $upload: (name: string, file:File, finish: (response: any) => void, error: (response: any) => void, progress: (event: { detail: { progress: number } } ) => void) => Promise<void>;
-    $uploadMultiple: (name: string, files: File[], finish: (response: any) => void, error: (response: any) => void, progress: (event: { detail: { progress: number } } ) => void) => Promise<void>;
-    $removeUpload: (name: string, tmpFilename: string, finish: (response: any) => void, error: (response: any) => void) => Promise<void>;
-    __instance: () => LivewireComponent;
-}
+    $upload: (
+        name: string,
+        file: File,
+        finish: (response: any) => void,
+        error: (response: any) => void,
+        progress: (event: { detail: { progress: number } }) => void
+    ) => Promise<void>;
+    $uploadMultiple: (
+        name: string,
+        files: File[],
+        finish: (response: any) => void,
+        error: (response: any) => void,
+        progress: (event: { detail: { progress: number } }) => void
+    ) => Promise<void>;
+    $removeUpload: (
+        name: string,
+        tmpFilename: string,
+        finish: (response: any) => void,
+        error: (response: any) => void
+    ) => Promise<void>;
+    __instance: LivewireComponent;
+};
 
 interface Window {
-    Mesh: {
-        components: ComponentsMap;
-        renderedComponents: {
-            [key: string]: RenderedComponent
-        };
-        config: Omit<Config, 'renderers'> & {
-            renderers: {
-                [key: string]: RenderFunction
-            };
-        }
-    } | undefined;
+    Mesh:
+        | {
+              components: ComponentsMap;
+              renderedComponents: {
+                  [key: string]: RenderedComponent;
+              };
+              config: Omit<Config, "renderers"> & {
+                  renderers: {
+                      [key: string]: RenderFunction;
+                  };
+              };
+          }
+        | undefined;
 }
 
 type Config = {
@@ -61,18 +117,23 @@ type Config = {
     maxRenderAttempts: number | undefined;
     renderDelay: number | undefined;
     debug: boolean | undefined;
-}
+};
 
 type RenderedComponent = {
     componentName: string;
     props: any;
     updateProps: (livewireComponent: LivewireComponent, props: any) => void;
     cleanup: CleanupCallback;
-}
+};
 
-type RenderFunction = (componentName: string, livewireComponent: LivewireComponent, MeshComponent: any, props: any) => RenderedComponent;
+type RenderFunction = (
+    componentName: string,
+    livewireComponent: LivewireComponent,
+    MeshComponent: any,
+    props: any
+) => RenderedComponent;
 
 type MeshRenderer = {
     type: string;
     renderComponent: RenderFunction;
-}
+};
