@@ -2,6 +2,14 @@
 
 All notable changes to `LivewireMesh` will be documented in this file.
 
+## v0.5.6 - 2025-07-17
+
+Updated useEntangle hook to accept generics for the data type.
+
+```tsx
+const [count, setCount] = useEntangle<number>('count')
+
+```
 ## v0.5.5 - 2025-05-15
 
 ### What's Changed
