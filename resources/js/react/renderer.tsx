@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import LivewireContext from "./contexts/LivewireContext";
+import { LivewireComponent, MeshRenderer } from "../types";
 
 export default {
     type: "react",
@@ -30,7 +31,6 @@ export default {
                         <MeshComponent {...props} />
                     </LivewireContext.Provider>
                 </React.StrictMode>
-                
             );
         };
 

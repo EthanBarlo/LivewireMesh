@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import useWire from "../hooks/useWire";
 import useEntangle from "../hooks/useWire";
+import { LivewireComponent } from "../../types";
 
 const LivewireContext = createContext<LivewireComponent | null>(null);
 

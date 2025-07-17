@@ -1,3 +1,4 @@
+import { Wire } from "../../types";
 import { useLivewireComponent } from "../contexts/LivewireContext";
 
 export default function useWire<T>() {
