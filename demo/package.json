@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "prerender": "tsx --tsconfig prerender.tsconfig.json ../prerender-server/src/server.ts ./prerender.config.ts",
+        "prerender:dev": "tsx watch --tsconfig prerender.tsconfig.json ../prerender-server/src/server.ts ./prerender.config.ts"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
@@ -21,6 +23,7 @@
         "vite": "^7.0.4"
     },
     "devDependencies": {
+        "tsx": "^4.21.0",
         "typescript": "^5.7.2"
     },
     "optionalDependencies": {

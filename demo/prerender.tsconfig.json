@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@livewiremesh/react/hooks/useEntangle": ["./vendor/ethanbarlo/livewiremesh/prerender-server/src/hooks/useEntangle.ts"],
+      "@livewiremesh/react/hooks/useWire": ["./vendor/ethanbarlo/livewiremesh/prerender-server/src/hooks/useWire.ts"],
+      "@livewiremesh/react/contexts/LivewireContext": ["./vendor/ethanbarlo/livewiremesh/prerender-server/src/ServerLivewireContext.tsx"],
+      "@livewiremesh/*": ["./vendor/ethanbarlo/livewiremesh/resources/js/*"],
+      "@/*": ["./resources/js/*"]
+    }
+  },
+  "include": ["prerender.config.ts", "resources/js/components/**/*"]
+}
