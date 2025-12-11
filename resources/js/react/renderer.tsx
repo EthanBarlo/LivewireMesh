@@ -1,7 +1,8 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot, Root } from "react-dom/client";
 import LivewireContext from "./contexts/LivewireContext";
 import { LivewireComponent, MeshRenderer } from "../types";
+import { isPrerendered, debugLog } from "../utils";
 
 export default {
     type: "react",
@@ -17,30 +18,63 @@ export default {
             throw new Error("LivewireMesh root element not found");
         }
 
-        const root = createRoot(root_element);
+        // Check if the component was prerendered on the server
+        const wasPrerendered = isPrerendered(livewireComponent.el);
+        debugLog(
+            `renderer | ${componentName}`,
+            wasPrerendered ? "Hydrating prerendered content" : "Client-side rendering"
+        );
 
-        // Creating a function here to allow us to update the props
-        // While maintaining the same root element thus maintaining any state
-        const renderComponent = (
+        let root: Root;
+
+        // Create the React element tree
+        const createReactElement = (
+            livewireComponent: LivewireComponent,
+            props: any
+        ) => (
+            <React.StrictMode>
+                <LivewireContext.Provider value={livewireComponent}>
+                    <MeshComponent {...props} />
+                </LivewireContext.Provider>
+            </React.StrictMode>
+        );
+
+        if (wasPrerendered && root_element.innerHTML.trim() !== "") {
+            // Use hydrateRoot for prerendered content
+            // This attaches event listeners without re-rendering the DOM
+            root = hydrateRoot(
+                root_element,
+                createReactElement(livewireComponent, props),
+                {
+                    onRecoverableError: (error, errorInfo) => {
+                        // Log hydration errors but don't crash
+                        console.warn(
+                            `LivewireMesh hydration warning for ${componentName}:`,
+                            error,
+                            errorInfo
+                        );
+                    },
+                }
+            );
+        } else {
+            // Use createRoot for client-side rendering
+            root = createRoot(root_element);
+            root.render(createReactElement(livewireComponent, props));
+        }
+
+        // Creating a function to allow updating props while maintaining the same root
+        // This preserves any component state during updates
+        const updateProps = (
             livewireComponent: LivewireComponent,
             props: any
         ) => {
-            root.render(
-                <React.StrictMode>
-                    <LivewireContext.Provider value={livewireComponent}>
-                        <MeshComponent {...props} />
-                    </LivewireContext.Provider>
-                </React.StrictMode>
-            );
+            root.render(createReactElement(livewireComponent, props));
         };
-
-        // Initial render
-        renderComponent(livewireComponent, props);
 
         return {
             componentName,
             props,
-            updateProps: renderComponent,
+            updateProps,
             cleanup: () => {
                 root.unmount();
             },

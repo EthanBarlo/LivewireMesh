@@ -1,5 +1,11 @@
+import type { RenderedComponent } from "./types";
+
 export function getComponentName(el: HTMLElement) {
     return el.dataset.meshComponent;
+}
+
+export function isPrerendered(el: HTMLElement): boolean {
+    return el.dataset.meshPrerendered === "true";
 }
 
 export function debugLog(...args: any[]) {
