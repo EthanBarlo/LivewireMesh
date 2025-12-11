@@ -10,22 +10,8 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
 
-        <!-- Tailwind CDN as fallback -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                darkMode: 'media',
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Inter', 'system-ui', 'sans-serif'],
-                        },
-                    }
-                }
-            }
-        </script>
-
         @livewireStyles
+        @vite(['resources/css/app.css', 'resources/js/app.ts'])
 
         <style>
             [x-cloak] { display: none !important; }
@@ -33,6 +19,7 @@
     </head>
     <body class="font-sans antialiased bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen">
         {{ $slot }}
-        @livewireScripts
+
+        @livewireScriptConfig
     </body>
 </html>

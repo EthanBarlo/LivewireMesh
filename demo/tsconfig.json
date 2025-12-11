@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/js/*"],
+            "@livewiremesh/*": ["vendor/ethanbarlo/livewiremesh/resources/js/*"]
+        }
+    },
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.tsx",
+        "vendor/ethanbarlo/livewiremesh/resources/js/**/*.ts",
+        "vendor/ethanbarlo/livewiremesh/resources/js/**/*.tsx"
+    ],
+    "exclude": ["node_modules"]
+}

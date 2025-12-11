@@ -43,9 +43,10 @@
             </p>
         </div>
 
-        <!-- Counter Card -->
-        <div class="w-full max-w-sm">
-            <livewire:counter />
+        <!-- Counter Cards -->
+        <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            <livewire:counter wire:model="count" />
+            <livewire:react-counter wire:model="count" />
         </div>
 
         <!-- Features Grid -->

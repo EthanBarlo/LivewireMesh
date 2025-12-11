@@ -24,6 +24,8 @@ You can install the package via composer:
 composer require ethanbarlo/livewiremesh
 ```
 
+**📖 For a complete setup guide, see [INSTALL.md](INSTALL.md)** — covers Vite configuration, TypeScript setup, manual Livewire bundling, and creating your first Mesh component.
+
 ## Documentation
 A full documentation and demo site is in the works.
 
