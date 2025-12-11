@@ -1,5 +1,6 @@
 import React from "react";
 import { useEntangle } from "@livewiremesh/react/hooks/useEntangle";
+import registerMeshComponent from "@livewiremesh/registerMeshComponent";
 
 interface ReactCounterProps {
     initialCount: number;
@@ -76,5 +77,8 @@ const ReactCounter: React.FC<ReactCounterProps> = ({ initialCount }) => {
         </div>
     );
 };
+
+// Self-register when loaded
+registerMeshComponent("react", "react-counter", ReactCounter);
 
 export default ReactCounter;

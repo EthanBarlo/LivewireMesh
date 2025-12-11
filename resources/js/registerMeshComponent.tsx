@@ -4,6 +4,11 @@ import { debugLog } from "./utils";
 const pendingRegistrations: Array<{ renderer: string; name: string; component: any }> = [];
 
 export default function registerMeshComponent(renderer: string, name: string, component: any) {
+    // Skip registration on server (SSR)
+    if (typeof window === "undefined") {
+        return;
+    }
+
     debugLog("registering component", { renderer, name, component });
 
     if (!window.Mesh) {
