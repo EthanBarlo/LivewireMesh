@@ -1,20 +1,11 @@
-/**
- * Server-side version of the Counter component.
- * 
- * This is used for prerendering. It's identical to the client version
- * but without the registerMeshComponent call (which is client-only).
- * 
- * The hooks are aliased via prerender.tsconfig.json to use server-side versions.
- */
-
 import React from "react";
 import { useEntangle } from "@livewiremesh/react/hooks/useEntangle";
 
-interface CounterProps {
+interface ReactCounterProps {
     initialCount: number;
 }
 
-const Counter: React.FC<CounterProps> = ({ initialCount }) => {
+const ReactCounter: React.FC<ReactCounterProps> = ({ initialCount }) => {
     const [count, setCount] = useEntangle<number>("count", initialCount);
 
     const handleIncrement = () => {
@@ -86,4 +77,4 @@ const Counter: React.FC<CounterProps> = ({ initialCount }) => {
     );
 };
 
-export default Counter;
+export default ReactCounter;

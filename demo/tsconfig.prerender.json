@@ -10,5 +10,5 @@
       "@/*": ["./resources/js/*"]
     }
   },
-  "include": ["prerender.config.ts", "resources/js/components/**/*"]
+  "include": ["prerender.config.ts", "resources/js/livewire/**/*"]
 }

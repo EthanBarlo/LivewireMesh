@@ -5,8 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prerender": "tsx --tsconfig prerender.tsconfig.json ../prerender-server/src/server.ts ./prerender.config.ts",
-        "prerender:dev": "tsx watch --tsconfig prerender.tsconfig.json ../prerender-server/src/server.ts ./prerender.config.ts"
+        "prerender": "tsx --tsconfig tsconfig.prerender.json ../prerender-server/src/server.ts ./prerender.config.ts",
+        "prerender:dev": "tsx watch --tsconfig tsconfig.prerender.json ../prerender-server/src/server.ts ./prerender.config.ts"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
@@ -16,6 +16,7 @@
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
+        "glob": "^10.5.0",
         "laravel-vite-plugin": "^2.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",

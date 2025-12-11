@@ -14,6 +14,35 @@ abstract class MeshComponent extends LivewireComponent
     abstract public function props(): array;
 
     /**
+     * Resolve a component name to its full path.
+     * Short names like 'react-counter' resolve to 'resources/js/livewire/react-counter.tsx'
+     * Full paths are returned as-is.
+     */
+    protected function resolveComponentPath(string $component): string
+    {
+        // If it contains a slash, it's already a full path
+        if (str_contains($component, '/')) {
+            return $component;
+        }
+
+        // Get the components directory from config, default to 'resources/js/livewire'
+        $componentsDir = config('livewiremesh.components_dir', 'resources/js/livewire');
+
+        // Get the extension from config, default to '.tsx'
+        $extension = config('livewiremesh.component_extension', '.tsx');
+
+        return "{$componentsDir}/{$component}{$extension}";
+    }
+
+    /**
+     * Get the resolved component path for Vite.
+     */
+    public function getResolvedComponent(): string
+    {
+        return $this->resolveComponentPath($this->component());
+    }
+
+    /**
      * Whether to prerender this specific component.
      * Override in child classes to disable prerendering for specific components.
      */

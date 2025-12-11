@@ -1,5 +1,5 @@
 @assets
-    @vite($this->component())
+    @vite($this->getResolvedComponent())
 @endassets
 
 @php

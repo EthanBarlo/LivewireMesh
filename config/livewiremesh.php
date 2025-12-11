@@ -5,6 +5,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Components Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory where LivewireMesh React components are located.
+    | When using short component names (e.g., 'react-counter'), they will
+    | be resolved to this directory.
+    |
+    */
+
+    'components_dir' => env('LIVEWIREMESH_COMPONENTS_DIR', 'resources/js/livewire'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Component Extension
+    |--------------------------------------------------------------------------
+    |
+    | The file extension used for React components.
+    |
+    */
+
+    'component_extension' => env('LIVEWIREMESH_COMPONENT_EXT', '.tsx'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Prerender Configuration
     |--------------------------------------------------------------------------
     |

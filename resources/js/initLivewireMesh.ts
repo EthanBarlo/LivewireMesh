@@ -1,4 +1,5 @@
 import renderComponent from "./renderComponent";
+import { processPendingRegistrations } from "./registerMeshComponent";
 import { Config } from "./types";
 import {
     debugLog,
@@ -17,7 +18,7 @@ export default async function initLivewireMesh(Livewire: any, config: Config) {
     } = config;
 
     // Initialize the LivewireMesh global object
-    // Which tracks the activly rendered components and their props
+    // Which tracks the actively rendered components and their props
     window.Mesh = {
         components: {},
         renderedComponents: {},
@@ -30,6 +31,9 @@ export default async function initLivewireMesh(Livewire: any, config: Config) {
             debug,
         },
     };
+
+    // Process any components that were registered before initialization
+    processPendingRegistrations();
 
     debugLog("Initialized LivewireMesh", window.Mesh.config);
 
