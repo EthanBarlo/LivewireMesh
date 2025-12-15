@@ -1,15 +1,10 @@
 import { createContext, useContext } from "react";
-import { LivewireComponentBase } from "../../types";
-
-const LivewireContext = createContext<LivewireComponentBase | null>(null);
-
+const LivewireContext = createContext(null);
 export default LivewireContext;
-
 export function useLivewireComponent() {
     const livewire = useContext(LivewireContext);
     if (!livewire) {
         throw new Error("useLivewire must be used within the LivewireContext");
     }
-
     return livewire;
 }

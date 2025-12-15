@@ -1,4 +1,4 @@
-import type { MockLivewireComponent, MockWire } from "./types";
+import type { MockWire, MockLivewireComponent } from "./types";
 
 /**
  * Creates a mock Wire instance for server-side rendering.
@@ -15,12 +15,10 @@ const createMockWire = (componentName: string, initialData: Record<string, unkno
     $id: `prerender-${componentName}-${Date.now()}`,
 
     $get: (key: string): unknown => {
-      // Return from initial props/data
       return data[key];
     },
 
     $set: (key: string, value: unknown, _live?: boolean): void => {
-      // Store locally (won't persist to server during prerender)
       data[key] = value;
       console.warn(
         `[Prerender] $wire.$set("${key}") called during server render. Value stored locally but won't sync to Livewire until hydration.`

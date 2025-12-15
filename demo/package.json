@@ -5,8 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prerender": "tsx --tsconfig tsconfig.prerender.json ../prerender-server/src/server.ts ./prerender.config.ts",
-        "prerender:dev": "tsx watch --tsconfig tsconfig.prerender.json ../prerender-server/src/server.ts ./prerender.config.ts"
+        "prerender": "node ./public/build/prerender-server.mjs ./public/build/prerender.config.mjs",
+        "prerender:dev": "tsx ../prerender-server/src/server.ts ./public/build/prerender.config.js"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",

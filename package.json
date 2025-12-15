@@ -1,6 +1,7 @@
 {
   "name": "livewiremesh",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "author": "EthanBarlo",
   "license": "ISC",

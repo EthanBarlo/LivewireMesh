@@ -22,7 +22,8 @@
         "resources/js/**/*.ts",
         "resources/js/**/*.tsx",
         "vendor/ethanbarlo/livewiremesh/resources/js/**/*.ts",
-        "vendor/ethanbarlo/livewiremesh/resources/js/**/*.tsx"
+        "vendor/ethanbarlo/livewiremesh/resources/js/**/*.tsx",
+        "prerender.config.ts"
     ],
     "exclude": ["node_modules"]
 }

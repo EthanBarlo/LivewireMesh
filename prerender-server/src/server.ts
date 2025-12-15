@@ -5,7 +5,11 @@ import path from "path";
 import { pathToFileURL } from "url";
 import type { RenderRequest, RenderResponse, ComponentRegistry } from "./types";
 import { createMockLivewireComponent } from "./mockLivewire";
-import { ServerLivewireContext } from "./ServerLivewireContext";
+
+// Declare global SSR context type
+declare global {
+    var __LIVEWIRE_SSR_CONTEXT__: ReturnType<typeof createMockLivewireComponent> | undefined;
+}
 
 // Component registry - populated from the components entry file
 let componentRegistry: ComponentRegistry = {};
@@ -67,7 +71,7 @@ app.post("/render", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    const Component = componentRegistry[component];
+    let Component = componentRegistry[component];
 
     if (!Component) {
       const response: RenderResponse = {
@@ -78,20 +82,27 @@ app.post("/render", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    // Create mock Livewire component for context
+    // Handle ESM interop - component might be wrapped as { default: Component }
+    if (typeof Component === "object" && Component !== null && "default" in Component) {
+      Component = (Component as any).default;
+    }
+
+    // Create mock Livewire component and set global for SSR
     const mockLivewire = createMockLivewireComponent(component, props || {});
+    globalThis.__LIVEWIRE_SSR_CONTEXT__ = mockLivewire;
 
-    // Render the component to HTML string with mock context
-    const html = renderToString(
-      React.createElement(
-        ServerLivewireContext.Provider,
-        { value: mockLivewire },
+    try {
+      // Render the component to HTML string
+      const html = renderToString(
         React.createElement(Component, props || {})
-      )
-    );
+      );
 
-    const response: RenderResponse = { html };
-    res.json(response);
+      const response: RenderResponse = { html };
+      res.json(response);
+    } finally {
+      // Clean up global context
+      globalThis.__LIVEWIRE_SSR_CONTEXT__ = undefined;
+    }
   } catch (error) {
     next(error);
   }
@@ -152,19 +163,20 @@ async function loadComponentsFromFile(entryPath: string): Promise<void> {
 /**
  * Start the prerender server.
  */
-export async function startServer(options?: { 
-  port?: number; 
+export async function startServer(options?: {
+  port?: number;
   componentsEntry?: string;
 }): Promise<void> {
   const PORT = options?.port || Number(process.env.PRERENDER_PORT) || 3001;
-  const ENTRY_PATH = options?.componentsEntry || process.env.PRERENDER_COMPONENTS || process.argv[2];
+  const DEFAULT_CONFIG_PATH = "public/build/prerender.config.js";
+  const ENTRY_PATH = options?.componentsEntry || process.env.PRERENDER_COMPONENTS || process.argv[2] || DEFAULT_CONFIG_PATH;
 
   if (ENTRY_PATH) {
     await loadComponentsFromFile(ENTRY_PATH);
   } else {
     console.log("ℹ️  No components entry file provided.");
     console.log("   Pass a file path as argument or set PRERENDER_COMPONENTS env var.");
-    console.log("   Example: npx tsx server.ts ./prerender.config.ts");
+    console.log("   Example: npx tsx server.ts ./public/build/prerender.config.js");
   }
 
   app.listen(PORT, () => {

@@ -2,12 +2,13 @@
 
 /**
  * LivewireMesh Prerender Server CLI
- * 
+ *
  * Usage:
- *   npx livewiremesh-prerender ./prerender.config.ts
- *   
+ *   npx livewiremesh-prerender                           # Uses default: public/build/prerender.config.js
+ *   npx livewiremesh-prerender ./custom-config.js        # Uses custom config path
+ *
  * Or with tsx (for TypeScript configs):
- *   npx tsx ./vendor/ethanbarlo/livewiremesh/prerender-server/src/server.ts ./prerender.config.ts
+ *   npx tsx ./vendor/ethanbarlo/livewiremesh/prerender-server/src/server.ts
  */
 
 import { spawn } from "child_process";
@@ -16,13 +17,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverPath = path.resolve(__dirname, "../src/server.ts");
-const componentsEntry = process.argv[2];
-
-if (!componentsEntry) {
-  console.error("Usage: livewiremesh-prerender <components-entry-file>");
-  console.error("Example: livewiremesh-prerender ./prerender.config.ts");
-  process.exit(1);
-}
+const componentsEntry = process.argv[2] || "public/build/prerender.config.js";
 
 // Use tsx to run the TypeScript server with the components entry
 const child = spawn("npx", ["tsx", serverPath, componentsEntry], {
