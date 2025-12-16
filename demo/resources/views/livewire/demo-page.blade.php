@@ -43,10 +43,18 @@
             </p>
         </div>
 
-        <!-- Counter Cards -->
-        <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Counter Cards - Deferred Sync -->
+        <h2 class="text-lg font-semibold text-white mb-2 text-center">Deferred State Sync (model="count")</h2>
+        <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center justify-center mb-8">
             <livewire:counter wire:model="count" />
             <livewire:react-counter wire:model="count" />
+        </div>
+
+        <!-- Counter Cards - Live Sync  -->
+        <h2 class="text-lg font-semibold text-white mb-2 text-center mt-4">Live State Sync (model.live="count")</h2>
+        <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center justify-center">
+            <livewire:counter wire:model.live="count" />
+            <livewire:react-counter wire:model.live="count" />
         </div>
 
         <!-- Features Grid -->

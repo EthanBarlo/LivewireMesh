@@ -18,7 +18,7 @@ const ReactCounter: React.FC<ReactCounterProps> = ({ initialCount }) => {
     };
 
     const handleReset = () => {
-        setCount(initialCount);
+        setCount(0);
     };
 
     return (

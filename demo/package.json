@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prerender": "node ./public/build/prerender-server.mjs ./public/build/prerender.config.mjs",
+        "prerender": "node ./public/build/mesh/prerender-server.mjs ./public/build/mesh/prerender.config.mjs",
         "prerender:dev": "tsx ../prerender-server/src/server.ts ./public/build/prerender.config.js"
     },
     "dependencies": {

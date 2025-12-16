@@ -17,10 +17,10 @@ export interface LivewireMeshPluginOptions {
   extensions?: string[];
 
   /**
-   * Output path for the auto-generated server bundle config (relative to project root).
-   * @default 'public/build/prerender.config.js'
+   * Output directory for prerender assets (relative to project root).
+   * @default 'public/build/mesh'
    */
-  serverConfigOutput?: string;
+  prerenderOutputDir?: string;
 }
 
 /**
@@ -33,7 +33,7 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
   const {
     componentsDir = "resources/js/livewire",
     extensions = [".tsx", ".jsx"],
-    serverConfigOutput = "public/build/prerender.config.js",
+    prerenderOutputDir = "public/build/mesh",
   } = options;
 
   let config: ResolvedConfig;
@@ -69,10 +69,17 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
         });
         console.log("");
 
-        // In dev mode, generate the config immediately
-        // In build mode, we defer to writeBundle (after Vite cleans the output dir)
+        // In dev mode, generate the raw config for use with tsx
+        // In build mode, we bundle it properly in writeBundle
         if (config.command === "serve") {
-          writePrerenderConfig(config.root, serverConfigOutput, componentFiles, componentsDir);
+          const devConfigPath = path.join(config.root, prerenderOutputDir, "prerender.config.js");
+          const devConfigDir = path.dirname(devConfigPath);
+          if (!fs.existsSync(devConfigDir)) {
+            fs.mkdirSync(devConfigDir, { recursive: true });
+          }
+          const serverConfig = generateServerConfig(componentFiles, config.root, componentsDir, devConfigDir);
+          fs.writeFileSync(devConfigPath, serverConfig);
+          console.log(`📦 LivewireMesh: Generated ${prerenderOutputDir}/prerender.config.js for dev mode\n`);
         }
       }
     },
@@ -80,9 +87,15 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
     // Generate prerender config and copy server bundle after build completes
     async writeBundle() {
       if (componentFiles.length > 0 && config.command === "build") {
+        const outputDir = path.join(config.root, prerenderOutputDir);
+
+        // Ensure output directory exists
+        if (!fs.existsSync(outputDir)) {
+          fs.mkdirSync(outputDir, { recursive: true });
+        }
+
         // First write the raw config (used as input for bundling)
         const tempConfigPath = path.join(config.root, ".prerender-temp.js");
-        const configDir = path.dirname(path.join(config.root, serverConfigOutput));
         const tempConfig = generateServerConfig(componentFiles, config.root, componentsDir, config.root);
         fs.writeFileSync(tempConfigPath, tempConfig);
 
@@ -92,10 +105,12 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
           await build({
             configFile: false,
             root: config.root,
+            publicDir: false, // Don't copy public dir
             build: {
               ssr: true,
-              outDir: configDir,
+              outDir: outputDir,
               emptyOutDir: false,
+              copyPublicDir: false,
               rollupOptions: {
                 input: { "prerender.config": tempConfigPath },
                 output: { format: "esm", entryFileNames: "[name].mjs" },
@@ -112,7 +127,7 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
             },
             logLevel: "silent",
           });
-          console.log(`📦 LivewireMesh: Built prerender.config.mjs with bundled components\n`);
+          console.log(`📦 LivewireMesh: Built ${prerenderOutputDir}/prerender.config.mjs\n`);
         } finally {
           // Clean up temp file
           if (fs.existsSync(tempConfigPath)) {
@@ -120,7 +135,7 @@ export function livewireMeshPlugin(options: LivewireMeshPluginOptions = {}): Plu
           }
         }
 
-        copyPrerenderServer(config.root, serverConfigOutput);
+        copyPrerenderServer(config.root, outputDir);
       }
     },
 
@@ -261,33 +276,9 @@ export default components;
 }
 
 /**
- * Write the prerender config file.
+ * Copy the prerender server bundle to the output directory.
  */
-function writePrerenderConfig(
-  root: string,
-  serverConfigOutput: string,
-  componentFiles: string[],
-  componentsDir: string
-): void {
-  const configPath = path.join(root, serverConfigOutput);
-  const configDir = path.dirname(configPath);
-
-  // Ensure the output directory exists
-  if (!fs.existsSync(configDir)) {
-    fs.mkdirSync(configDir, { recursive: true });
-  }
-
-  const serverConfig = generateServerConfig(componentFiles, root, componentsDir, configDir);
-  fs.writeFileSync(configPath, serverConfig);
-  console.log(`📦 LivewireMesh: Generated ${serverConfigOutput} for prerendering\n`);
-}
-
-/**
- * Copy the prerender server bundle to the build output directory.
- */
-function copyPrerenderServer(root: string, serverConfigOutput: string): void {
-  const configDir = path.dirname(path.join(root, serverConfigOutput));
-
+function copyPrerenderServer(root: string, outputDir: string): void {
   // Try to find the prerender server bundle in common locations
   const possiblePaths = [
     // Installed via npm/composer in vendor
@@ -309,7 +300,7 @@ function copyPrerenderServer(root: string, serverConfigOutput: string): void {
     return;
   }
 
-  const destPath = path.join(configDir, "prerender-server.mjs");
+  const destPath = path.join(outputDir, "prerender-server.mjs");
   fs.copyFileSync(serverBundlePath, destPath);
 
   // Also copy sourcemap if it exists
