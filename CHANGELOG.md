@@ -2,6 +2,10 @@
 
 All notable changes to `LivewireMesh` will be documented in this file.
 
+## v0.6.0 - 2026-03-03
+
+Added Livewire 4 support.
+
 ## v0.5.7 - 2025-07-17
 
 Added a new `useErrorBag` hook.
