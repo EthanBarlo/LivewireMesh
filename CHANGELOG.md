@@ -2,6 +2,17 @@
 
 All notable changes to `LivewireMesh` will be documented in this file.
 
+## v0.6.1 - 2026-05-14
+
+### Fixed
+
+- Mesh components rendered mid-page-life (e.g. inside a Livewire-toggled modal) now mount reliably on the first render instead of racing the asset loader. The wrapper view now emits a `data-mesh-asset` URL and the client dynamically imports it when the component isn't already registered; the previous polling retry loop is removed.
+- `MeshComponent::getMeshViewPath()` now refreshes its per-class cached view when the package view is newer, so package view updates propagate without requiring consumers to manually clear `storage/framework/views/mesh-*.blade.php`.
+
+### Deprecated
+
+- `maxRenderAttempts` and `renderDelay` on `initLivewireMesh` config are unused (dynamic asset loading replaced the retry loop). They remain accepted for backward compatibility and will be removed in a future version.
+
 ## v0.6.0 - 2026-03-03
 
 Added Livewire 4 support.

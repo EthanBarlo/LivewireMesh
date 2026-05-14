@@ -5,8 +5,6 @@ import reactRenderer from '@livewiremesh/react/renderer';
 // Initialize LivewireMesh with configuration
 initLivewireMesh(Livewire, {
     renderers: [reactRenderer],
-    maxRenderAttempts: 100,
-    renderDelay: 50,
     debug: true,
 });
 

@@ -2,15 +2,52 @@ import renderComponent from "./renderComponent";
 import { Config } from "./types";
 import {
     debugLog,
+    getComponentAsset,
     getComponentName,
     getProps,
     getRenderedComponent,
     setRenderedComponent,
 } from "./utils";
 
+// Tracks in-flight dynamic imports per asset URL so multiple instances of the
+// same mesh component don't trigger redundant network work.
+const assetLoaders: Record<string, Promise<unknown>> = {};
+
+async function ensureComponentRegistered(
+    componentName: string,
+    assetUrl: string | undefined
+): Promise<void> {
+    if (window.Mesh?.components[componentName]) {
+        return;
+    }
+
+    if (!assetUrl) {
+        throw new Error(
+            `LivewireMesh: component "${componentName}" is not registered and no data-mesh-asset URL was provided to load it dynamically.`
+        );
+    }
+
+    if (!assetLoaders[assetUrl]) {
+        debugLog("component.init | " + componentName, "Importing asset", assetUrl);
+        assetLoaders[assetUrl] = import(/* @vite-ignore */ assetUrl).catch((e) => {
+            delete assetLoaders[assetUrl];
+            throw e;
+        });
+    }
+
+    await assetLoaders[assetUrl];
+
+    if (!window.Mesh?.components[componentName]) {
+        throw new Error(
+            `LivewireMesh: asset at "${assetUrl}" finished loading but did not register component "${componentName}".`
+        );
+    }
+}
+
 export default async function initLivewireMesh(Livewire: any, config: Config) {
     const {
         renderers,
+        // Deprecated: kept only so existing configs / window.Mesh.config stay valid; ignored.
         maxRenderAttempts = 100,
         renderDelay = 50,
         debug,
@@ -42,25 +79,28 @@ export default async function initLivewireMesh(Livewire: any, config: Config) {
         }
         debugLog("component.init | " + componentName, { component });
 
-        debugLog("component.init | " + componentName, "Rendering component");
-        let renderAttempts = 0;
-        while (renderAttempts < maxRenderAttempts) {
-            try {
-                const renderedComponent = await renderComponent(
-                    component,
-                    componentName
-                );
-                setRenderedComponent(component.id, renderedComponent);
-                cleanup(() => renderedComponent.cleanup());
-                break;
-            } catch (e) {
-                renderAttempts++;
-                debugLog(
-                    "component.init | " + componentName,
-                    "Rendering component (attempt " + renderAttempts + ")"
-                );
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-            }
+        try {
+            await ensureComponentRegistered(
+                componentName,
+                getComponentAsset(component.el)
+            );
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+
+        try {
+            const renderedComponent = await renderComponent(
+                component,
+                componentName
+            );
+            setRenderedComponent(component.id, renderedComponent);
+            cleanup(() => renderedComponent.cleanup());
+        } catch (e) {
+            console.error(
+                `LivewireMesh: failed to render "${componentName}"`,
+                e
+            );
         }
     });
 

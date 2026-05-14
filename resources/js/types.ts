@@ -98,7 +98,13 @@ export type Wire = {
 
 export type Config = {
     renderers: MeshRenderer[];
+    /**
+     * @deprecated Unused since asset URLs drive loading (`data-mesh-asset`). Ignored at runtime; will be removed in a future version.
+     */
     maxRenderAttempts: number | undefined;
+    /**
+     * @deprecated Unused since asset URLs drive loading (`data-mesh-asset`). Ignored at runtime; will be removed in a future version.
+     */
     renderDelay: number | undefined;
     debug: boolean | undefined;
 };

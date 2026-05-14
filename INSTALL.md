@@ -134,14 +134,14 @@ import reactRenderer from '@livewiremesh/react/renderer';
 // Initialize LivewireMesh with configuration
 initLivewireMesh(Livewire, {
     renderers: [reactRenderer],
-    maxRenderAttempts: 100,
-    renderDelay: 50,
     debug: false, // Set to true for development
 });
 
 // Start Livewire (which also starts Alpine)
 Livewire.start();
 ```
+
+The options `maxRenderAttempts` and `renderDelay` are **deprecated** as of v0.6.1 (they are ignored; removal planned). Omit them from new configurations.
 
 ## 7. Create Your First Mesh Component
 

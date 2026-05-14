@@ -2,6 +2,10 @@ export function getComponentName(el: HTMLElement) {
     return el.dataset.meshComponent;
 }
 
+export function getComponentAsset(el: HTMLElement) {
+    return el.dataset.meshAsset;
+}
+
 export function debugLog(...args: any[]) {
     if (window.Mesh?.config.debug) {
         console.log("LivewireMesh | ", ...args);
